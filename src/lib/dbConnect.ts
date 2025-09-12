@@ -7,7 +7,7 @@ type ConnectionObject = {
 
 const connection: ConnectionObject = {}
 
-async function dbConnect(): Promise<void> {//void is telling me that i don't mind what type of data is returned
+async function dbConnect(): Promise<void> {//void is telling i am not expecting anything in return from this function
     if(connection.isConnected){
         console.log("Already connected to database")
         return
