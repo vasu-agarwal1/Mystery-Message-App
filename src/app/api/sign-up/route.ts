@@ -3,6 +3,7 @@ import userModel from "@/model/User";
 import bcrypt from "bcryptjs";
 import { sendVerificationEmail } from "@/helpers/sendVerificationEmail";
 import { success } from "zod";
+import { send } from "process";
 
 export async function POST(request: Request){
     await dbConnect()
@@ -26,7 +27,19 @@ export async function POST(request: Request){
         const verifyCode = Math.floor(100000 + Math.random()* 900000).toString()
 
         if(existingUserByEmail){
-            return Response.json({})
+            if(existingUserByEmail.isVerified){
+                return Response.json({
+                    success: false,
+                    message: "Email is already registered"
+                },
+            {status: 400})
+            } else {
+                const hashedPassword = await bcrypt.hash(password, 10)
+                existingUserByEmail.password = hashedPassword
+                existingUserByEmail.verifyCode = verifyCode
+                existingUserByEmail.verifyCodeExpiry = new Date(Date.now() + 3600000)
+                await existingUserByEmail.save()
+            }
         }else{
             const hashedPassword = await bcrypt.hash(password, 10)
             const expiryDate = new Date()
@@ -47,7 +60,28 @@ export async function POST(request: Request){
         }
 
         //send verification email
-        
+        const emailResponse = await sendVerificationEmail(
+            email,
+            username,
+            verifyCode
+        )
+
+        if (!emailResponse.success) {
+            return Response.json(
+                {
+                    success: false,
+                    message: emailResponse.message
+                },{status: 500}
+            )
+        }
+
+        return Response.json(
+            {
+                success: false,
+                message: "User registered Successfully. Please verify your email"
+            },{status: 500}
+        )
+
     } catch (error) {
         console.error('Error registering user', error)
         return Response.json(
