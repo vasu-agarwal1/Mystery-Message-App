@@ -9,7 +9,7 @@ import {
   Text,
   Button,
 } from '@react-email/components';
-
+// this file is for sending email with help of resend service
 interface VerificationEmailProps {
   username: string;
   otp: string;
