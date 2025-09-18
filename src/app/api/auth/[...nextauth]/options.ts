@@ -7,6 +7,9 @@ import { email } from "zod";
 
 
 export const authOptions: NextAuthOptions = {
+    // providers are used to login user
+    // here we are using credentials provider to login user with email and password
+    // you can also use other providers like google, facebook, twitter etc
     providers: [
         CredentialsProvider({
             id: "credentials",
@@ -44,6 +47,8 @@ export const authOptions: NextAuthOptions = {
             },
         })
     ],
+    // callbacks are used to modify the token and session
+    // here we are adding user details to the token and session
     callbacks: {
         async jwt({token, user}){
             if(user) {

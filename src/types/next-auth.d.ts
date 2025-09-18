@@ -1,5 +1,6 @@
 import 'next-auth'
 import { DefaultSession } from 'next-auth'
+// this file is for adding custom fields to the next-auth session and jwt token
 
 declare module 'next-auth' {
     interface User{
