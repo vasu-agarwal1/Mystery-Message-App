@@ -16,7 +16,7 @@ const MessageSchema: Schema<Message> = new Schema({
         default: Date.now
     }
 })
-
+// interface is used to define the structure of a User document in MongoDB
 export interface User extends Document{
     username: string;
     email: string;
