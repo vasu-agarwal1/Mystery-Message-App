@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getToken } from 'next-auth/jwt'
  
-
+// Middleware function to handle authentication and redirection
 export async function middleware(request: NextRequest) {
     const token = await getToken({req: request})
     const url = request.nextUrl
