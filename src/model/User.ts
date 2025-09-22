@@ -1,4 +1,5 @@
 import mongoose, {Schema, Document} from "mongoose"
+// this file defines the User model for MongoDB using Mongoose
 
 export interface Message extends Document{
     content: string;
