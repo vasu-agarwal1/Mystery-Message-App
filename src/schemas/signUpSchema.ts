@@ -1,4 +1,5 @@
 import {z} from 'zod'
+// this file is used to validate the sign up data using zod
 
 export const usernameValidation = z
    .string()
