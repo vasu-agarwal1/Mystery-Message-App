@@ -11,6 +11,7 @@ const UsernamQuerySchema = z.object({
 
 export async function GET(request: Request){
     await dbConnect()
+
     try {
         const {searchParams} = new URL(request.url)
         const queryParam = {
@@ -18,7 +19,9 @@ export async function GET(request: Request){
         }
         //validate with zod
         const result = UsernamQuerySchema.safeParse(queryParam)
+
         console.log(result)
+
         if(!result.success) {
             const usernameErrors = result.error.format().
             username?._errors || []
@@ -29,6 +32,25 @@ export async function GET(request: Request){
                 : 'Invalid query parameters'
             })
         }
+
+        const {username} = result.data
+
+        const existingVerifiedUser = await userModel.findOne({
+            username, isVerified: true
+        })
+
+        if(existingVerifiedUser){
+            return Response.json({
+                success: false,
+                message: 'Username is already taken',
+            }, {status: 400})
+        }
+
+        return Response.json({
+            success: true,
+            message: 'Username is available',
+        }, {status: 200})
+
     } catch (error) {
         console.error("Error checking username", error)
         return Response.json(
